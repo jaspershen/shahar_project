@@ -1,17 +1,14 @@
 no_source()
-
 rm(list = ls())
-
 library(tidyverse)
 
 setwd(masstools::get_project_wd())
-
 source("1_code/tools.R")
 
-load("3_data_analysis/1_data_preparation/survey_data/survey_data")
+load("3_data_analysis/1_data_preparation/survey_data_6_points/survey_data")
 
-dir.create("3_data_analysis/2_data_overview/survey_data", recursive = TRUE)
-setwd("3_data_analysis/2_data_overview/survey_data")
+dir.create("3_data_analysis/2_data_overview/survey_data_6_timepoints", recursive = TRUE)
+setwd("3_data_analysis/2_data_overview/survey_data_6_timepoints")
 
 expression_data <-
   massdataset::extract_expression_data(survey_data)
@@ -143,15 +140,15 @@ plot <-
   as.ggplot(plot)
 plot
 
-# ggsave(plot,
-#        filename = "heatmap.pdf",
-#        width = 5,
-#        height = 6)
-# ggsave(plot,
-#        filename = "heatmap.png",
-#        width = 5,
-#        height = 6)
-# 
-# temp_data
-# 
-# write.csv(temp_data, "data_for_heatmap.csv")
+ggsave(plot,
+       filename = "heatmap.pdf",
+       width = 5,
+       height = 6)
+ggsave(plot,
+       filename = "heatmap.png",
+       width = 5,
+       height = 6)
+
+temp_data
+
+write.csv(temp_data, "data_for_heatmap.csv")
