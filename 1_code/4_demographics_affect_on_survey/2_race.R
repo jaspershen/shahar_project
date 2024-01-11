@@ -11,9 +11,9 @@ source("1_code/tools.R")
 load("3_data_analysis/1_data_preparation/survey_data/survey_data")
 load("3_data_analysis/1_data_preparation/phenotype_info/phenotype_data")
 
-dir.create("3_data_analysis/4_demographics_affect_on_survery/race",
+dir.create("3_data_analysis/4_demographics_affect_on_survey/race",
            recursive = TRUE)
-setwd("3_data_analysis/4_demographics_affect_on_survery/race")
+setwd("3_data_analysis/4_demographics_affect_on_survey/race")
 
 expression_data <-
   massdataset::extract_expression_data(survey_data)

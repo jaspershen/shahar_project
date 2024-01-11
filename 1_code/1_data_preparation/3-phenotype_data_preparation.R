@@ -21,7 +21,6 @@ phenotype_data <-
   dplyr::mutate(demographics_sex = case_when(demographics_sex == 1 ~ "Male",
                                              demographics_sex == 2 ~ "Female"))
 
-
 ###race
 race_choices <-
   c(
@@ -51,7 +50,7 @@ phenotype_data$demographics_race <-
 ##education
 education_choices <-
   c(
-    "Some High School",
+    "Same High School",
     "High School",
     "Bachelor",
     "Master",
@@ -74,7 +73,6 @@ living_status_choices <-
 
 phenotype_data$demographics_living <-
   living_status_choices[phenotype_data$demographics_living]
-
 
 ###marital status
 
@@ -157,5 +155,10 @@ phenotype_data$demographics_participate <-
   watch_participant_choices[phenotype_data$demographics_participate]
 
 phenotype_data$subject_id <- as.character(phenotype_data$subject_id)
+
+class(phenotype_data$demographics_birth)
+
+phenotype_data$age <-
+  (lubridate::ymd("2023-01-01") - lubridate::ymd(phenotype_data$demographics_birth)) / 365
 
 save(phenotype_data, file = "phenotype_data")

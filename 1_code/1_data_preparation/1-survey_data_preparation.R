@@ -22,6 +22,10 @@ timestamp <-
   survey_data %>%
   dplyr::select(c(contains("_timestamp")))
 
+timestamp2 <-
+  survey_data %>%
+  dplyr::select(c(contains("date")))
+
 sample_info <-
   cbind(sample_info, timestamp)
 
