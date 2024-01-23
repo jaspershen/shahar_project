@@ -301,3 +301,4 @@ temp_data %>%
 # Low stress: 0-13
 # Moderate stress: 14-26
 # High stress: 27-40
+
