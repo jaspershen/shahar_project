@@ -36,7 +36,6 @@ temp_data <-
   dplyr::select(-matches("pss_[0-9]{1,2}")) %>%
   dplyr::select(-matches("who_[0-9]{1,2}"))
 
-
 colnames(temp_data) <-
   variable_info$real_name[match(colnames(temp_data), variable_info$variable_id)]
 
@@ -101,6 +100,8 @@ colnames(temp_data) %>%
       temp2 %>%
       dplyr::filter(rowSums(is.na(.)) <= 2)
 
+    temp2[is.na(temp2)] <- min(temp2, na.rm = TRUE)
+    
     heatmap_plot <-
       Heatmap(
         temp2,
@@ -109,7 +110,7 @@ colnames(temp_data) %>%
         border = TRUE,
         show_row_names = FALSE,
         rect_gp = gpar(col = "white"),
-        # row_km = 4,     
+        row_km = 4,
         # column_km = 2,
         name = x
       )
