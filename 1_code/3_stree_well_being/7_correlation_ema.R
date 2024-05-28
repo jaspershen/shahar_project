@@ -47,9 +47,11 @@ cor_data <-
 
 library(ComplexHeatmap)
 
+cor_range <- circlize::colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+
 plot <-
   Heatmap(
-    cor_data,
+    cor_data,col = cor_range,
     cluster_columns = TRUE,
     cluster_rows = TRUE,
     border = TRUE,

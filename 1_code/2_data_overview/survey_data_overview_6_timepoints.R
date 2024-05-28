@@ -34,30 +34,28 @@ temp_data <-
   dplyr::select(-matches("who_[0-9]{1,2}"))
 
 ###output all survey scores
-survey_mean_sd <- 
-paste0("_", 1:5) %>% 
-  purrr::map(function(idx){
+survey_mean_sd <-
+  paste0("_", 1:5) %>%
+  purrr::map(function(idx) {
     mean_value <-
-    apply(temp_data[stringr::str_detect(rownames(temp_data), idx),], 2, function(x){
-      mean(x, na.rm = TRUE)   
-  })
-
-    sd_value <-
-      apply(temp_data[stringr::str_detect(rownames(temp_data), idx),], 2, function(x){
-        sd(x, na.rm = TRUE)   
+      apply(temp_data[stringr::str_detect(rownames(temp_data), idx), ], 2, function(x) {
+        mean(x, na.rm = TRUE)
       })
     
-    data.frame(mean_value, sd_value) %>% 
+    sd_value <-
+      apply(temp_data[stringr::str_detect(rownames(temp_data), idx), ], 2, function(x) {
+        sd(x, na.rm = TRUE)
+      })
+    
+    data.frame(mean_value, sd_value) %>%
       dplyr::rename_all(funs(paste0(., idx)))
     
-}) %>% 
-  do.call(cbind, .) %>% 
-  as.data.frame() %>% 
+  }) %>%
+  do.call(cbind, .) %>%
+  as.data.frame() %>%
   tibble::rownames_to_column(var = "variable_id")
 
 write.csv(survey_mean_sd, "survey_mean_sd.csv", row.names = FALSE)
-
-
 
 temp <-
   temp_data %>%
@@ -81,13 +79,9 @@ sd(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
 mean(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
 sd(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
 
-t.test(temp[stringr::str_detect(rownames(temp), "_1"), ],
-       temp[stringr::str_detect(rownames(temp), "_6"), ])
+t.test(temp[stringr::str_detect(rownames(temp), "_1"), ], temp[stringr::str_detect(rownames(temp), "_6"), ])
 
-t.test(temp[stringr::str_detect(rownames(temp), "_3"), ],
-       temp[stringr::str_detect(rownames(temp), "_6"), ])
-
-
+t.test(temp[stringr::str_detect(rownames(temp), "_3"), ], temp[stringr::str_detect(rownames(temp), "_6"), ])
 
 temp <-
   temp_data %>%
@@ -111,14 +105,9 @@ sd(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
 mean(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
 sd(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
 
-t.test(temp[stringr::str_detect(rownames(temp), "_1"), ],
-       temp[stringr::str_detect(rownames(temp), "_6"), ])
+t.test(temp[stringr::str_detect(rownames(temp), "_1"), ], temp[stringr::str_detect(rownames(temp), "_6"), ])
 
-t.test(temp[stringr::str_detect(rownames(temp), "_3"), ],
-       temp[stringr::str_detect(rownames(temp), "_6"), ])
-
-
-
+t.test(temp[stringr::str_detect(rownames(temp), "_3"), ], temp[stringr::str_detect(rownames(temp), "_6"), ])
 
 temp <-
   temp_data %>%
@@ -142,12 +131,9 @@ sd(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
 mean(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
 sd(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
 
+t.test(temp[stringr::str_detect(rownames(temp), "_1"), ], temp[stringr::str_detect(rownames(temp), "_6"), ])
 
-t.test(temp[stringr::str_detect(rownames(temp), "_1"), ],
-       temp[stringr::str_detect(rownames(temp), "_6"), ])
-
-t.test(temp[stringr::str_detect(rownames(temp), "_3"), ],
-       temp[stringr::str_detect(rownames(temp), "_6"), ])
+t.test(temp[stringr::str_detect(rownames(temp), "_3"), ], temp[stringr::str_detect(rownames(temp), "_6"), ])
 
 
 library(plyr)
@@ -155,8 +141,7 @@ library(plyr)
 temp_data <-
   temp_data %>%
   tibble::rownames_to_column(var = "sample_id") %>%
-  dplyr::left_join(sample_info[, c("sample_id", "check_point")],
-                   by = "sample_id") %>%
+  dplyr::left_join(sample_info[, c("sample_id", "check_point")], by = "sample_id") %>%
   plyr::dlply(.variables = .(check_point)) %>%
   purrr::map(function(x) {
     x %>%
@@ -179,7 +164,6 @@ library(ComplexHeatmap)
 
 rownames(temp_data) <-
   variable_info$real_name[match(rownames(temp_data), variable_info$variable_id)]
-
 
 plot <-
   Heatmap(

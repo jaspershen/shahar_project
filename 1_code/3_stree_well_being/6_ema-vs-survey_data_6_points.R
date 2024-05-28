@@ -184,6 +184,28 @@ final_matched_result %>% lapply(function(x)
 # save(final_result, file = "final_result")
 load("final_result")
 
+###Build a graph of X- EMA timepoint, Y- number of participants that answered the EMA’s
+plot <-
+final_result %>%
+  purrr::map(function(x) {
+    if(is.null(x)){
+      return(x)
+    }else{
+      x[,c("subject_id", "time_point")]
+    }
+  }) %>% 
+  do.call(rbind, .) %>% 
+  as.data.frame() %>% 
+  dplyr::count(time_point) %>% 
+  ggplot(aes(time_point, n)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = n), vjust = -0.3) +
+  theme_bw() +
+  labs(x = "EMA timepoint", y = "Number of participants")
+plot
+ggsave(plot, filename = "EMA_timepoint.pdf", width = 8, height = 6)
+ggsave(plot, filename = "EMA_timepoint.png", width = 8, height = 6)
+
 library(Hmisc)
 
 cor_data_individual <-
