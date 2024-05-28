@@ -7,7 +7,8 @@ source("1_code/tools.R")
 
 load("3_data_analysis/1_data_preparation/survey_data_6_points/survey_data")
 
-dir.create("3_data_analysis/2_data_overview/survey_data_6_timepoints", recursive = TRUE)
+dir.create("3_data_analysis/2_data_overview/survey_data_6_timepoints",
+           recursive = TRUE)
 setwd("3_data_analysis/2_data_overview/survey_data_6_timepoints")
 
 expression_data <-
@@ -32,68 +33,121 @@ temp_data <-
   dplyr::select(-matches("pss_[0-9]{1,2}")) %>%
   dplyr::select(-matches("who_[0-9]{1,2}"))
 
-temp <-
-temp_data %>% 
-  dplyr::select(pss_total) 
+###output all survey scores
+survey_mean_sd <- 
+paste0("_", 1:5) %>% 
+  purrr::map(function(idx){
+    mean_value <-
+    apply(temp_data[stringr::str_detect(rownames(temp_data), idx),], 2, function(x){
+      mean(x, na.rm = TRUE)   
+  })
 
-mean(temp[stringr::str_detect(rownames(temp), "_1"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_1"),], na.rm = TRUE)
-mean(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
+    sd_value <-
+      apply(temp_data[stringr::str_detect(rownames(temp_data), idx),], 2, function(x){
+        sd(x, na.rm = TRUE)   
+      })
+    
+    data.frame(mean_value, sd_value) %>% 
+      dplyr::rename_all(funs(paste0(., idx)))
+    
+}) %>% 
+  do.call(cbind, .) %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column(var = "variable_id")
 
-t.test(temp[stringr::str_detect(rownames(temp), "_1"),],
-       temp[stringr::str_detect(rownames(temp), "_5"),])
-
-mean(temp[stringr::str_detect(rownames(temp), "_3"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_3"),], na.rm = TRUE)
-mean(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-
-t.test(temp[stringr::str_detect(rownames(temp), "_3"),],
-       temp[stringr::str_detect(rownames(temp), "_5"),])
-
-
-temp <-
-  temp_data %>% 
-  dplyr::select(burnout_total) 
-
-mean(temp[stringr::str_detect(rownames(temp), "_1"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_1"),], na.rm = TRUE)
-mean(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-
-t.test(temp[stringr::str_detect(rownames(temp), "_1"),],
-       temp[stringr::str_detect(rownames(temp), "_5"),])
-
-mean(temp[stringr::str_detect(rownames(temp), "_3"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_3"),], na.rm = TRUE)
-mean(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-
-t.test(temp[stringr::str_detect(rownames(temp), "_3"),],
-       temp[stringr::str_detect(rownames(temp), "_5"),])
+write.csv(survey_mean_sd, "survey_mean_sd.csv", row.names = FALSE)
 
 
 
 temp <-
-  temp_data %>% 
-  dplyr::select(resilience_total) 
+  temp_data %>%
+  dplyr::select(pss_total)
 
-mean(temp[stringr::str_detect(rownames(temp), "_1"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_1"),], na.rm = TRUE)
-mean(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
+mean(temp[stringr::str_detect(rownames(temp), "_1"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_1"), ], na.rm = TRUE)
 
-t.test(temp[stringr::str_detect(rownames(temp), "_1"),],
-       temp[stringr::str_detect(rownames(temp), "_5"),])
+mean(temp[stringr::str_detect(rownames(temp), "_2"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_2"), ], na.rm = TRUE)
 
-mean(temp[stringr::str_detect(rownames(temp), "_3"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_3"),], na.rm = TRUE)
-mean(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
-sd(temp[stringr::str_detect(rownames(temp), "_5"),], na.rm = TRUE)
+mean(temp[stringr::str_detect(rownames(temp), "_3"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_3"), ], na.rm = TRUE)
 
-t.test(temp[stringr::str_detect(rownames(temp), "_3"),],
-       temp[stringr::str_detect(rownames(temp), "_5"),])
+mean(temp[stringr::str_detect(rownames(temp), "_4"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_4"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
+
+t.test(temp[stringr::str_detect(rownames(temp), "_1"), ],
+       temp[stringr::str_detect(rownames(temp), "_6"), ])
+
+t.test(temp[stringr::str_detect(rownames(temp), "_3"), ],
+       temp[stringr::str_detect(rownames(temp), "_6"), ])
+
+
+
+temp <-
+  temp_data %>%
+  dplyr::select(burnout_total)
+
+mean(temp[stringr::str_detect(rownames(temp), "_1"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_1"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_2"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_2"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_3"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_3"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_4"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_4"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
+
+t.test(temp[stringr::str_detect(rownames(temp), "_1"), ],
+       temp[stringr::str_detect(rownames(temp), "_6"), ])
+
+t.test(temp[stringr::str_detect(rownames(temp), "_3"), ],
+       temp[stringr::str_detect(rownames(temp), "_6"), ])
+
+
+
+
+temp <-
+  temp_data %>%
+  dplyr::select(resilience_total)
+
+mean(temp[stringr::str_detect(rownames(temp), "_1"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_1"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_2"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_2"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_3"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_3"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_4"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_4"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_5"), ], na.rm = TRUE)
+
+mean(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
+sd(temp[stringr::str_detect(rownames(temp), "_6"), ], na.rm = TRUE)
+
+
+t.test(temp[stringr::str_detect(rownames(temp), "_1"), ],
+       temp[stringr::str_detect(rownames(temp), "_6"), ])
+
+t.test(temp[stringr::str_detect(rownames(temp), "_3"), ],
+       temp[stringr::str_detect(rownames(temp), "_6"), ])
 
 
 library(plyr)

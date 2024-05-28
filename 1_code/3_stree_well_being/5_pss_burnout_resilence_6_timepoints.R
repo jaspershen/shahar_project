@@ -89,7 +89,7 @@ cor_data_individual <-
   dplyr::distinct(name, .keep_all = TRUE)
 
 
-save(cor_data_individual, file = "cor_data_individual")
+# save(cor_data_individual, file = "cor_data_individual")
 
 load("cor_data_individual")
 library(gghalves)
@@ -144,7 +144,18 @@ plot <-
              aes(color = subject_id),
              show.legend = FALSE) +
   geom_smooth(method = "lm") +
-  theme_bw()
+  theme_bw() +
+  annotate("text", x = 10, y = 50, 
+           label = paste("Spearman's rho = ", 
+                         round(cor.test(temp$Stress_PSS, 
+                                        temp$Burnout_total_OLBI, 
+                                        method = "spearman")$estimate, 2))) +
+  annotate("text", x = 10, y = 40, 
+           label = paste("P value = ", 
+                         round(cor.test(temp$Stress_PSS, 
+                                        temp$Burnout_total_OLBI, 
+                                        method = "spearman")$p.value, 4)))
+
 plot
 ggsave(plot,
        filename = "Stress_PSS-vs-Burnout_total_OLBI.pdf",
@@ -157,9 +168,9 @@ ggsave(plot,
        height = 7)
 
 
-
 cor.test(temp$Stress_PSS, temp$Resilience_CDRISC, method = "spearman")
 cor.test(temp_data$Stress_PSS, temp_data$Resilience_CDRISC, method = "spearman")
+
 plot <-
   temp_data %>%
   tibble::rownames_to_column(var = "sample_id") %>%
@@ -169,7 +180,17 @@ plot <-
              aes(color = subject_id),
              show.legend = FALSE) +
   geom_smooth(method = "lm") +
-  theme_bw()
+  theme_bw() +
+  annotate("text", x = 10, y = 40, 
+           label = paste("Spearman's rho = ", 
+                         round(cor.test(temp$Stress_PSS, 
+                                        temp$Resilience_CDRISC, 
+                                        method = "spearman")$estimate, 2))) +
+  annotate("text", x = 10, y = 30, 
+           label = paste("P value = ", 
+                         round(cor.test(temp$Stress_PSS, 
+                                        temp$Resilience_CDRISC, 
+                                        method = "spearman")$p.value, 4)))
 plot
 ggsave(plot,
        filename = "Stress_PSS-vs-Resilience_CDRISC.pdf",
@@ -192,7 +213,17 @@ plot <-
              show.legend = FALSE) +
   geom_smooth(method = "lm") +
   theme_bw() +
-  labs(subtitle = "Cor: -1; p: 0.01667")
+  annotate("text", x = 20, y = 40, 
+           label = paste("Spearman's rho = ", 
+                         round(cor.test(temp$Burnout_total_OLBI, 
+                                        temp$Resilience_CDRISC, 
+                                        method = "spearman")$estimate, 2))) +
+  annotate("text", x = 20, y = 30, 
+           label = paste("P value = ", 
+                         round(cor.test(temp$Burnout_total_OLBI, 
+                                        temp$Resilience_CDRISC, 
+                                        method = "spearman")$p.value, 4)))
+  
 plot
 ggsave(plot,
        filename = "Burnout_total_OLBI-vs-Resilience_CDRISC.pdf",
